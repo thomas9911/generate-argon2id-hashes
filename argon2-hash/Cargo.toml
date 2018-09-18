@@ -1,8 +1,9 @@
 [package]
 name = "argon2-hash"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["thomas9911 <thomastimmer11@hotmail.com>"]
 
 [dependencies]
 rust-argon2 = "0.2.0"
 rand = "0.5.5"
+clap = {version = "2.32", features = ["yaml"]}

@@ -2,30 +2,28 @@
 extern crate argon2;
 extern crate rand;
 
-use std::env;
 use argon2::{Config, ThreadMode, Variant, Version};
 use rand::{OsRng, RngCore};
 
+#[macro_use]
+extern crate clap;
+use clap::App;
+
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    match args.len() {
-        2 => {
-                match args[1].parse() {
-                    Ok(password) => println!("{}", make_pwdhash(password)),
-                    _ => println!("This is not the answer to life."),
-                }
-            },
-        _ => println!("{}", print_help()),
-    }
-}
+    let yaml = load_yaml!("cli.yml");
+    let app = App::from_yaml(yaml)
+            .name(crate_name!()); 
 
+    let matches = app.get_matches();
 
-fn print_help() -> String {
-    "
-    Generates Argon2id hashes with random salt and using some defaults.
-    The first argument is the password which you use to generate the hash
-    ".to_string()
+    let pwd = matches.value_of("PASSWD").expect("This is required!!");
+    let p =  value_t!(matches, "parallelism", u32).unwrap_or(1);
+    let t =  value_t!(matches, "iterations", u32).unwrap_or(10);
+    let m =  value_t!(matches, "memory_size", u32).unwrap_or(65536);
+    let hash_len =  value_t!(matches, "hash_length", u32).unwrap_or(32);
+
+    println!("{}", make_pwdhash(pwd.to_string(), p, t, m, hash_len));
 }
 
 
@@ -40,19 +38,19 @@ fn make_salt(length: usize) -> Vec<u8>{
 }
 
 
-fn make_pwdhash(pwd: String) -> String{
+fn make_pwdhash(pwd: String, p: u32, t: u32, m: u32, hash_len: u32) -> String{
     let password = pwd.as_bytes();
     let salt = make_salt(8);
     let config = Config {
         variant: Variant::Argon2id,
         version: Version::Version13,
-        mem_cost: 65536,
-        time_cost: 10,
-        lanes: 1,
+        mem_cost: m,
+        time_cost: t,
+        lanes: p,
         thread_mode: ThreadMode::Parallel,
         secret: &[],
         ad: &[],
-        hash_length: 32
+        hash_length: hash_len
     };
     let hash = argon2::hash_encoded(&password, &salt, &config).unwrap();
     return hash;

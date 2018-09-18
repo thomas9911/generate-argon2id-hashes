@@ -1,0 +1,32 @@
+name: argon2-hash
+version: "0.2.0"
+about: Generates Argon2id hashes with random salt and using some defaults. The first argument is the password which you use to generate the hash
+args:
+    - PASSWD:
+        help: The password to hash
+        required: true
+        index: 1
+    - parallelism:
+        short: p
+        long: parallelism
+        value_name: NUM_OF_THREADS
+        takes_value: true
+        help: Degree of parallelism (i.e. number of threads)
+    - iterations:
+        short: t
+        long: iterations 
+        value_name: NUM_OF_ITER
+        takes_value: true
+        help: Number of iterations to perform
+    - memory_size :
+        short: m
+        long: memory  
+        value_name: SIZE_KB
+        takes_value: true
+        help: Amount of memory (in kilobytes) to use
+    - hash_length:
+        short: T
+        long: hashlength 
+        value_name: RETURN_BYTES
+        takes_value: true
+        help: Desired number of returned bytes
