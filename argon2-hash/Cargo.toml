@@ -1,0 +1,8 @@
+[package]
+name = "argon2-hash"
+version = "0.1.0"
+authors = ["thomas9911 <thomastimmer11@hotmail.com>"]
+
+[dependencies]
+rust-argon2 = "0.2.0"
+rand = "0.5.5"
