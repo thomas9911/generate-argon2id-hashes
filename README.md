@@ -2,7 +2,7 @@
 Program to generate argon2id password hashes.
 
 ## Build:
-cargo build --release
+`cargo build --release`
 
 `cd target/release` to your freshly baked executable 🥧
 
